@@ -123,7 +123,9 @@ def calculate_evaporative_fraction(
     Shuttleworth (1993).
     """
     # EF is the fraction of available energy used for evaporation
-    return rt.where((LE == 0) | ((Rn - G) == 0), 0, LE / (Rn - G))
+    # Suppress divide-by-zero warning since we handle it explicitly with rt.where
+    with np.errstate(divide='ignore', invalid='ignore'):
+        return rt.where((LE == 0) | ((Rn - G) == 0), 0, LE / (Rn - G))
 
 
 def daylight_ET_from_daylight_LE(
